@@ -1,0 +1,15 @@
+{
+  "name": "itcrowd",
+  "owner": {
+    "name": "itcrowd",
+    "url": "https://github.com/itcrowdarg"
+  },
+  "description": "Claude Code plugins for itcrowd developers",
+  "plugins": [
+    {
+      "name": "knowledge-base",
+      "source": "./plugins/knowledge-base",
+      "description": "Keeps a per-project knowledge base of recurring environment problems (build, Docker, deploy, dependencies, OS differences) and their solutions"
+    }
+  ]
+}
