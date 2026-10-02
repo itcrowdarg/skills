@@ -6,9 +6,26 @@ Claude Code plugins built by itcrowd for itcrowd developers. You enable them per
 
 ## Plugins
 
+Plugins are grouped by category. Each plugin is small and does one job, so a project enables only what it needs.
+
+### Project knowledge
+
+Helps developers understand a project and keep what the team learns about it.
+
 | Plugin | What it does |
 |---|---|
-| [`knowledge-base`](plugins/knowledge-base) | Keeps a knowledge base of recurring environment problems (build, Docker, deploy, dependencies, OS differences) in `.knowledge-base/` inside the project. Claude checks it when an error appears and offers to save new problems once they are solved. |
+| [`knowledge-base`](plugins/project-knowledge/knowledge-base) | Keeps a knowledge base of recurring environment problems (build, Docker, deploy, dependencies, OS differences) in `.knowledge-base/` inside the project. Claude checks it when an error appears and offers to save new problems once they are solved. |
+
+### Planned categories
+
+| Category | Scope |
+|---|---|
+| `discovery` | Turning an idea into a defined feature or project through a guided conversation |
+| `dev-workflow` | Commits, pull requests, code review, branching |
+| `quality` | Tests, QA, security review |
+| `delivery` | Deploy, Docker, CI, infrastructure |
+| `client-communication` | Progress reports, release notes, estimates |
+| `design` | Figma to code, UI review |
 
 ## Add the plugins to a client project
 

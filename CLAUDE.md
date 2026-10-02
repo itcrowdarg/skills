@@ -7,7 +7,7 @@ This repository is a Claude Code plugin marketplace named `itcrowd`. Client proj
 ```
 .
 ├── .claude-plugin/marketplace.json   # marketplace catalog: one entry per plugin
-├── plugins/<plugin>/
+├── plugins/<category>/<plugin>/
 │   ├── .claude-plugin/plugin.json    # plugin manifest
 │   ├── skills/<skill>/SKILL.md
 │   ├── hooks/hooks.json              # optional
@@ -19,8 +19,10 @@ This repository is a Claude Code plugin marketplace named `itcrowd`. Client proj
 ## Rules
 
 - Commit messages follow Conventional Commits: `type(scope): message`. The scope is the plugin name, or `marketplace` for repository-wide changes.
-- Every plugin lives in `plugins/<plugin>/` and its marketplace entry uses a relative `source` (`./plugins/<plugin>`). Plugins with a relative source load from the marketplace clone without `claude plugin install`. A plugin in an external repository would force every developer to install it by hand.
-- Prefer several small plugins over one large plugin. Each project enables only the plugins it needs.
+- Every plugin lives in `plugins/<category>/<plugin>/` and its marketplace entry uses a relative `source` (`./plugins/<category>/<plugin>`). Plugins with a relative source load from the marketplace clone without `claude plugin install`. A plugin in an external repository would force every developer to install it by hand.
+- Prefer several small plugins over one large plugin. A plugin is enabled as a whole, hooks included, so each project enables only the plugins it needs.
+- Categories group plugins in the folder tree, in the `category` field of each marketplace entry, and in the sections of `README.md`. Category names are kebab-case: `project-knowledge`, `discovery`, `dev-workflow`, `quality`, `delivery`, `client-communication`, `design`.
+- When a category has two or more plugins, add a bundle plugin named after the category: a `plugin.json` with only `name`, `version`, `description` and a `dependencies` array listing the category's plugins. A project then enables the whole category with one entry. See https://code.claude.com/docs/en/plugins/dependencies.
 - Hooks run on macOS, Linux and WSL. Write them as a small POSIX `sh` launcher that finds Python 3 (`python3`, then `python`) and runs a Python script that uses only the standard library. If Python is missing, the hook exits 0 and prints a `systemMessage` that explains what to install. A hook must never break the session. Don't depend on `jq`.
 - Skills tell Claude to ask before writing files in the client repository.
 
@@ -29,14 +31,15 @@ This repository is a Claude Code plugin marketplace named `itcrowd`. Client proj
 1. Make the change.
 2. Bump `version` in the plugin's `.claude-plugin/plugin.json`. Claude Code pins a plugin to its `version`, so without a bump the change doesn't reach users.
 3. Run `claude plugin validate .` from the repository root. It must pass with no errors.
-4. Update the plugin table in `README.md` if the plugin's purpose changed.
+4. Update the plugin's row in `README.md` if its purpose changed.
 
 ## Add a plugin
 
-1. Create `plugins/<plugin>/.claude-plugin/plugin.json` with `name`, `version`, `description`, `author`, `license` and `repository`.
-2. Add an entry to `.claude-plugin/marketplace.json` with `name`, `source` and `description`.
-3. Add a row to the plugin table in `README.md`.
-4. Run `claude plugin validate .`.
+1. Create `plugins/<category>/<plugin>/.claude-plugin/plugin.json` with `name`, `version`, `description`, `author`, `license` and `repository`.
+2. Add an entry to `.claude-plugin/marketplace.json` with `name`, `source`, `category` and `description`.
+3. Add a row to the category's table in `README.md`. A new category also gets its own section there.
+4. If the category now has two or more plugins, add or update its bundle plugin.
+5. Run `claude plugin validate .`.
 
 ## Documentation links
 
