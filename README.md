@@ -15,6 +15,7 @@ Helps developers understand a project and keep what the team learns about it.
 | Plugin | What it does |
 |---|---|
 | [`knowledge-base`](plugins/project-knowledge/knowledge-base) | Keeps a knowledge base of recurring environment problems (build, Docker, deploy, dependencies, OS differences) in `.knowledge-base/` inside the project. Claude checks it when an error appears and offers to save new problems once they are solved. |
+| [`kb-central`](plugins/project-knowledge/kb-central) | Connects the project to the team's central knowledge base, a private repository with a wiki per project. Claude reads the wiki when an error appears, and sends what the team learns as GitHub issues after you confirm them. |
 
 ### Planned categories
 

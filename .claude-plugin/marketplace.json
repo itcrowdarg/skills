@@ -11,6 +11,12 @@
       "source": "./plugins/project-knowledge/knowledge-base",
       "category": "project-knowledge",
       "description": "Keeps a per-project knowledge base of recurring environment problems (build, Docker, deploy, dependencies, OS differences) and their solutions"
+    },
+    {
+      "name": "kb-central",
+      "source": "./plugins/project-knowledge/kb-central",
+      "category": "project-knowledge",
+      "description": "Sends what the team learns to a central private knowledge base repository as GitHub issues, and reads its wiki"
     }
   ]
 }
