@@ -14,7 +14,7 @@ Send problems and facts another developer of this project is likely to need agai
 
 Don't send bugs in the code of the current task, tests that fail while a feature is in progress, or one-off mistakes like typos.
 
-If the problem is already in the central index (loaded at session start under "Central knowledge base index"), don't create a duplicate. Offer action `actualizar` with that page's slug as the reference instead.
+If the problem is already in the central index (loaded at session start under "Central knowledge base index"), don't create a duplicate. Offer action `update` with that page's slug as the reference instead.
 
 ## Steps
 
@@ -32,15 +32,15 @@ If `python3` doesn't exist, run the same command with `python`. It prints `url <
 
 | Field | Value |
 |---|---|
-| Proyecto | The `url` printed in step 1 |
-| Categoría | `knowledge-base` |
-| Acción | `crear` for something new, `actualizar` to correct or extend an existing page, `deprecar` when a page no longer applies |
-| Título | One line, at most 120 characters, that says what fails or what it is about. Example: `node-gyp fails building the Docker image on Alpine` |
-| Texto | Four short sections in this order: **Symptom** (what the developer sees, with the literal error text), **Cause**, **Solution** (exact commands or changes), **How to verify** |
-| Alcance propuesto | `all` if it happens everywhere. Otherwise the environments where it was seen, comma-separated, as `<os>-<arch>`: `macos-arm64`, `macos-x86_64`, `linux-x86_64`, `linux-arm64`, `wsl-x86_64`. Detect the current one with `uname -sm`, and WSL when `/proc/version` contains `microsoft` |
-| Referencia (opcional) | The slug of the existing page, required for `actualizar` and `deprecar`. Empty for `crear` |
+| Project | The `url` printed in step 1 |
+| Category | `knowledge-base` |
+| Action | `create` for something new, `update` to correct or extend an existing page, `deprecate` when a page no longer applies |
+| Title | One line, at most 120 characters, that says what fails or what it is about. Example: `node-gyp fails building the Docker image on Alpine` |
+| Text | Four short sections in this order: **Symptom** (what the developer sees, with the literal error text), **Cause**, **Solution** (exact commands or changes), **How to verify** |
+| Proposed scope | `all` if it happens everywhere. Otherwise the environments where it was seen, comma-separated, as `<os>-<arch>`: `macos-arm64`, `macos-x86_64`, `linux-x86_64`, `linux-arm64`, `wsl-x86_64`. Detect the current one with `uname -sm`, and WSL when `/proc/version` contains `microsoft` |
+| Reference (optional) | The slug of the existing page, required for `update` and `deprecate`. Empty for `create` |
 
-Write the text in the language the team uses in this project.
+Write the title and the text in English.
 
 ### 3. Redact
 
@@ -59,31 +59,31 @@ It replaces tokens, passwords, connection strings, private keys, IP addresses, i
 Build the body with exactly these headings, in this order, separated by blank lines. This is how GitHub renders the issue form, and the routine rejects any other shape:
 
 ```
-### Proyecto
+### Project
 
 <project url>
 
-### Categoría
+### Category
 
 knowledge-base
 
-### Acción
+### Action
 
-<crear|actualizar|deprecar>
+<create|update|deprecate>
 
-### Título
+### Title
 
 <title>
 
-### Texto
+### Text
 
 <text>
 
-### Alcance propuesto
+### Proposed scope
 
 <scope>
 
-### Referencia (opcional)
+### Reference (optional)
 
 <slug, or _No response_ when empty>
 ```
@@ -98,7 +98,7 @@ Write the body to a temporary file outside the project, then create the issue:
 f=$(mktemp) && cat > "$f" <<'KB_ISSUE_END'
 <body>
 KB_ISSUE_END
-gh issue create --repo "$KB_CENTRAL_REPO" --label kb --label kb:pendiente --title "<title>" --body-file "$f"; rm -f "$f"
+gh issue create --repo "$KB_CENTRAL_REPO" --label kb --label kb:pending --title "<title>" --body-file "$f"; rm -f "$f"
 ```
 
 - If `gh` fails because of a label, run the same command once more without the two `--label` options and tell the user the issue has no labels.
