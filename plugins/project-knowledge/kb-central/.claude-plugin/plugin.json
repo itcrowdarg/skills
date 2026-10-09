@@ -1,6 +1,6 @@
 {
   "name": "kb-central",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Sends what the team learns to a central private knowledge base repository as GitHub issues, and reads its wiki",
   "author": {
     "name": "itcrowd",

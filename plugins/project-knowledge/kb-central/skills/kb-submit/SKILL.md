@@ -26,7 +26,7 @@ Run:
 python3 ${CLAUDE_PLUGIN_ROOT}/scripts/kb.py project
 ```
 
-If `python3` doesn't exist, run the same command with `python`. It prints `url <project url>` and `name <project name>`. If it prints an error about `KB_CENTRAL_REPO`, show the error to the user and stop. Otherwise read the repository name with `echo "$KB_CENTRAL_REPO"`.
+If `python3` doesn't exist, run the same command with `python`. It prints `repo <owner/name>` (the central repository), `url <project url>` and `name <project name>`. If it prints an error, show it to the user and stop.
 
 ### 2. Draft the fields
 
@@ -92,17 +92,17 @@ Show the user the repository, the title and the full body. Ask whether to send i
 
 ### 5. Create the issue
 
-Write the body to a temporary file outside the project, then create the issue:
+1. Write the body with the Write tool to `${CLAUDE_PLUGIN_DATA}/issue-body.md`. That file is outside the project and is overwritten by the next issue.
+2. Create the issue with a single command, with the repository and the title written out literally (no variables, pipes, redirects or `&&`):
 
-```sh
-f=$(mktemp) && cat > "$f" <<'KB_ISSUE_END'
-<body>
-KB_ISSUE_END
-gh issue create --repo "$KB_CENTRAL_REPO" --label kb --label kb:pending --title "<title>" --body-file "$f"; rm -f "$f"
-```
+   ```sh
+   gh issue create --repo <owner/name> --label kb --label kb:pending --title "<title>" --body-file ${CLAUDE_PLUGIN_DATA}/issue-body.md
+   ```
+
+   A plain `gh` call is what a developer can exclude from the Claude Code sandbox (`"excludedCommands": ["gh *"]`). If `gh` fails with `x509` or `failed to verify certificate`, it ran inside the sandbox: tell the user to add `gh *` to `sandbox.excludedCommands` in `~/.claude/settings.json`, and give them the fallback below.
 
 - If `gh` fails because of a label, run the same command once more without the two `--label` options and tell the user the issue has no labels.
-- If `gh` is missing or not authenticated (`gh auth status` fails), don't try to install or log in. Print the title and the body, and give the user `https://github.com/<KB_CENTRAL_REPO>/issues/new` to paste them by hand.
+- If `gh` is missing or not authenticated (`gh auth status` fails), don't try to install or log in. Print the title and the body, and give the user `https://github.com/<owner/name>/issues/new` to paste them by hand.
 
 ### 6. Report
 

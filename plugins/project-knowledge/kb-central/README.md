@@ -42,3 +42,17 @@ Enable the plugin and name the central repository in the project's `.claude/sett
 The hook never stops the session. If `gh` is missing, GitHub doesn't answer within 5 seconds, or you have no access, the session starts with a one-line message. When GitHub can't be reached, the hook uses the last copy of the index it downloaded, kept in the plugin's data directory.
 
 If `gh` can't create the issue, `kb-submit` prints the title and the body and gives you the link to open the issue by hand.
+
+### Sandbox on macOS
+
+`gh` fails TLS verification inside the Claude Code sandbox on macOS (`x509: OSStatus -26276`). If you use the sandbox, run `gh` outside it, as the [sandbox documentation](https://code.claude.com/docs/en/sandboxing#go-based-clis-fail-tls-verification-on-macos) recommends. Add this to `~/.claude/settings.json`:
+
+```json
+{
+  "sandbox": {
+    "excludedCommands": ["gh *"]
+  }
+}
+```
+
+The skills run `gh` as a single plain command so that this pattern matches it. The `SessionStart` hook doesn't run in the sandbox, so the index loads either way.

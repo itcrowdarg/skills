@@ -2,12 +2,12 @@
 """Helpers shared by the kb-central skills and hook. Python 3 standard library only.
 
 Subcommands:
-  project          Print the project URL and the project name from `git remote get-url origin`.
+  project          Print the central repository (KB_CENTRAL_REPO), the project URL and the project
+                   name, the last two from `git remote get-url origin`.
   redact           Read text on stdin, print it with secrets and personal data replaced.
-  index            Print projects/<name>/index.md from the central repository.
-  read <path>      Print one file of the central repository (read-only).
 
-The central repository comes from the KB_CENTRAL_REPO environment variable (`owner/name`).
+The skills call `gh` themselves instead of going through this script: on macOS, `gh` fails TLS
+verification inside the Claude Code sandbox, and only a plain `gh ...` call can be excluded from it.
 """
 
 import os
@@ -154,17 +154,13 @@ def main(argv):
     cmd = argv[1]
     try:
         if cmd == "project":
+            repo = central_repo()
             url, name = project()
-            print("url %s\nname %s" % (url, name))
+            print("repo %s\nurl %s\nname %s" % (repo, url, name))
         elif cmd == "redact":
             text, n = redact(sys.stdin.read())
             sys.stdout.write(text)
             print("kb-central: %d replacement(s)" % n, file=sys.stderr)
-        elif cmd == "index":
-            _, name = project()
-            sys.stdout.write(gh_read(index_path(name)))
-        elif cmd == "read" and len(argv) == 3:
-            sys.stdout.write(gh_read(argv[2]))
         else:
             print(__doc__.strip(), file=sys.stderr)
             return 2
