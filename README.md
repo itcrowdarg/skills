@@ -2,15 +2,11 @@
 
 Claude Code plugins built by itcrowd for itcrowd developers. You enable them per client project, and every developer who opens that project in Claude Code gets them.
 
-> Work in progress. The marketplace has one category with two plugins today.
+> Work in progress. The marketplace has one category with one plugin today.
 
 ## How it is organized
 
-Plugins are grouped in **categories**. Each plugin is small and does one job, and a project enables plugins one by one. To use a whole category, enable every plugin listed for it:
-
-| Category | Plugins to enable |
-|---|---|
-| Project knowledge | `knowledge-base@itcrowd`, `kb-central@itcrowd` |
+Plugins are grouped in **categories**. Each plugin is small and does one job, and a project enables plugins one by one. To use a whole category, enable every plugin of its table in [Plugins](#plugins).
 
 ## Plugins
 
@@ -20,8 +16,7 @@ Helps developers understand a project and keep what the team learns about it.
 
 | Plugin | What it does |
 |---|---|
-| [`knowledge-base`](plugins/project-knowledge/knowledge-base) | Keeps a knowledge base of recurring environment problems (build, Docker, deploy, dependencies, OS differences) in `.knowledge-base/` inside the project. Claude checks it when an error appears and offers to save new problems once they are solved. |
-| [`kb-central`](plugins/project-knowledge/kb-central) | Connects the project to the team's central knowledge base, a private repository with a wiki per project. Claude reads the wiki when an error appears, and sends what the team learns as GitHub issues after you confirm them. |
+| [`kb-central`](plugins/project-knowledge/kb-central) | Connects the project to the team's central knowledge base, a private repository with a wiki per project. Claude reads the wiki when an error appears, and sends the problems the team solves as GitHub issues after you confirm them. Needs `KB_CENTRAL_REPO` in the project settings and `gh` logged in on every machine. |
 
 ### Planned categories
 
@@ -49,7 +44,10 @@ Create or edit `.claude/settings.json` in the root of the project repository and
     }
   },
   "enabledPlugins": {
-    "knowledge-base@itcrowd": true
+    "kb-central@itcrowd": true
+  },
+  "env": {
+    "KB_CENTRAL_REPO": "itcrowdarg/kb"
   }
 }
 ```
@@ -57,18 +55,19 @@ Create or edit `.claude/settings.json` in the root of the project repository and
 - `extraKnownMarketplaces` tells Claude Code where the `itcrowd` marketplace lives.
 - `autoUpdate: true` keeps the plugins up to date on every developer's machine. See [Updates](#updates).
 - `enabledPlugins` lists the plugins the project uses, as `<plugin>@itcrowd`.
+- `env` holds the settings some plugins need. Each plugin's README lists them: `kb-central` needs `KB_CENTRAL_REPO`, and the project must be listed in the central repository. See [its README](plugins/project-knowledge/kb-central).
 
 ### Choose categories and plugins
 
-Pick plugins from the table in [How it is organized](#how-it-is-organized). To take a whole category, list all its plugins. To leave one out, don't list it.
+Pick plugins from the tables in [Plugins](#plugins). To take a whole category, list all its plugins. To leave one out, don't list it.
 
-Example with planned categories and plugins that don't exist yet. The project takes all of a `dev-workflow` category with two plugins, nothing from `design`, and only `knowledge-base` from `project-knowledge`:
+Example with planned categories and plugins that don't exist yet. The project takes all of a `dev-workflow` category with two plugins, nothing from `design`, and `kb-central` from `project-knowledge`:
 
 ```json
 "enabledPlugins": {
   "commit-messages@itcrowd": true,
   "code-review@itcrowd": true,
-  "knowledge-base@itcrowd": true
+  "kb-central@itcrowd": true
 }
 ```
 
@@ -80,10 +79,10 @@ The same setup with the CLI, from the root of the project:
 
 ```sh
 claude plugin marketplace add itcrowdarg/skills --scope project
-claude plugin install knowledge-base@itcrowd --scope project
+claude plugin install kb-central@itcrowd --scope project
 ```
 
-The commands don't set `autoUpdate`. Add `"autoUpdate": true` to the `itcrowd` entry of `.claude/settings.json` by hand.
+The commands don't set `autoUpdate` or `env`. Add `"autoUpdate": true` to the `itcrowd` entry of `.claude/settings.json`, and the `env` values the plugins need, by hand.
 
 ## Use the plugins as a developer
 
@@ -100,7 +99,7 @@ Add this to `.claude/settings.local.json` in the project. Don't commit that file
 ```json
 {
   "enabledPlugins": {
-    "knowledge-base@itcrowd": false
+    "kb-central@itcrowd": false
   }
 }
 ```
