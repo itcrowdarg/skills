@@ -51,6 +51,7 @@ Add `"KB_CENTRAL_PROJECT": "<org>/<repo>"` to `env` if the project needs it (see
 
 ## Permissions
 
+- In the default permission mode, Claude Code asks before it uses each skill for the first time (`Use skill "kb-central:kb-search"?`).
 - The skills run `scripts/kb.py` without asking, during the turn in which they start. If you ask for changes to a draft, the next run asks once.
 - `gh issue create` always asks: it is the second confirmation before anything leaves your machine.
 - Each `gh api` call that reads a wiki page asks. To allow it for good, add a rule to `.claude/settings.local.json` in the project:
@@ -70,6 +71,8 @@ Add `"KB_CENTRAL_PROJECT": "<org>/<repo>"` to `env` if the project needs it (see
 The hook never stops the session. If `gh` is missing or not logged in, GitHub doesn't answer within 5 seconds, or the project has no index yet, the session starts with a one-line message. The message appears when the session starts, not again after `/clear`, `/compact` or a resume. When GitHub can't be reached, the hook uses the last copy of the index it downloaded, kept in the plugin's data directory.
 
 If `gh` can't create the issue, the submit skill gives you the file with the body and the link to open the issue by hand.
+
+In auto mode, if your message contains a password or a token, the auto mode classifier can block the submit skill before it starts (`Denied by auto mode classifier · [Credential Leakage]`). Nothing is sent. Describe the problem again without the secret: the skill doesn't need it, and it would redact it anyway.
 
 ### Sandbox on macOS
 
