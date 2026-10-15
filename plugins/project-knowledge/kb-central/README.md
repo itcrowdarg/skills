@@ -2,23 +2,33 @@
 
 Connects a project to the team's central knowledge base: a private GitHub repository that holds a wiki for every project. Developers send what they learn as GitHub issues, and Claude reads the wiki when an error appears or a question comes up.
 
-The plugin never writes to the central repository other than by creating issues. A scheduled routine in that repository validates the issues and turns them into wiki pages through a pull request that a person reviews.
+The plugin never writes to the central repository other than by creating issues. A routine in that repository validates the issues and turns them into wiki pages through a pull request that a person reviews.
 
 ## What it adds
 
 | Piece | What it does |
 |---|---|
 | `kb-search` skill | When an error appears or you ask how something works, Claude looks for the answer in the project's wiki and cites the page. |
-| `kb-submit` skill | After a problem is solved, or when you ask, Claude drafts an issue, redacts secrets and personal data, shows it to you and creates it only after you say yes. |
-| `SessionStart` hook | Loads `projects/<name>/index.md` from the central repository into the session, so Claude knows which pages exist. |
+| `kb-submit-troubleshooting` skill | After a problem is solved, or when you ask, Claude drafts an issue, redacts secrets and personal data, shows it to you and creates it only after you say yes. |
+| `SessionStart` hook | Loads `projects/<org>/<repo>/index.md` from the central repository into the session, so Claude knows which pages exist. |
 
-`<name>` is the name of the project's repository in lowercase, taken from `git remote get-url origin`.
+## Categories
+
+The central repository keeps several kinds of knowledge, called categories. Each category has its own submit skill, named `kb-submit-<category>`, because each one is sent at a different moment and with a different text. Today there is one: `troubleshooting`, problems with their solution.
+
+To add a category, add its definition and issue form to the central repository first, then a `kb-submit-<category>` skill here. Its `## Send` section must be the same as in the other submit skills: `tests/test_kb_central.py` checks it.
+
+## Project id
+
+Every project has an id, `<org>/<repo>` in lowercase. By default it comes from the path of `git remote get-url origin`, whatever the host, so SSH host aliases such as `git@github-work:org/repo.git` work.
+
+Set `KB_CENTRAL_PROJECT` when the remote doesn't give the right id: a repository outside GitHub with subgroups, or several repositories (front end and back end) that share one wiki.
 
 ## Requirements
 
 - [GitHub CLI](https://cli.github.com/) (`gh`), logged in with `gh auth login` to an account with read access to the central repository.
 - Python 3, standard library only.
-- The project is a git repository with a GitHub remote named `origin`.
+- The project is a git repository with a remote named `origin`, or sets `KB_CENTRAL_PROJECT`.
 
 ## Set it up in a project
 
@@ -35,13 +45,31 @@ Enable the plugin and name the central repository in the project's `.claude/sett
 }
 ```
 
+Add `"KB_CENTRAL_PROJECT": "<org>/<repo>"` to `env` if the project needs it (see [Project id](#project-id)). The project id must be listed in `projects.txt` of the central repository.
+
 `env` values from the project settings apply after you trust the folder. Without `KB_CENTRAL_REPO`, the hook shows a one-line message and the skills explain how to set it.
+
+## Permissions
+
+- The skills run `scripts/kb.py` without asking, during the turn in which they start. If you ask for changes to a draft, the next run asks once.
+- `gh issue create` always asks: it is the second confirmation before anything leaves your machine.
+- Each `gh api` call that reads a wiki page asks. To allow it for good, add a rule to `.claude/settings.local.json` in the project:
+
+  ```json
+  {
+    "permissions": {
+      "allow": ["Bash(gh api repos/itcrowdarg/kb/contents/*)"]
+    }
+  }
+  ```
+
+  The `*` also matches other options of `gh api`. With read access to the central repository, `gh api` can't change it anyway.
 
 ## When something fails
 
-The hook never stops the session. If `gh` is missing, GitHub doesn't answer within 5 seconds, or you have no access, the session starts with a one-line message. When GitHub can't be reached, the hook uses the last copy of the index it downloaded, kept in the plugin's data directory.
+The hook never stops the session. If `gh` is missing or not logged in, GitHub doesn't answer within 5 seconds, or the project has no index yet, the session starts with a one-line message. The message appears when the session starts, not again after `/clear`, `/compact` or a resume. When GitHub can't be reached, the hook uses the last copy of the index it downloaded, kept in the plugin's data directory.
 
-If `gh` can't create the issue, `kb-submit` prints the title and the body and gives you the link to open the issue by hand.
+If `gh` can't create the issue, the submit skill gives you the file with the body and the link to open the issue by hand.
 
 ### Sandbox on macOS
 

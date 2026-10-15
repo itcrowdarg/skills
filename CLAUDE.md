@@ -12,6 +12,7 @@ This repository is a Claude Code plugin marketplace named `itcrowd`. Client proj
 │   ├── skills/<skill>/SKILL.md
 │   ├── hooks/hooks.json              # optional
 │   └── README.md                     # optional, what the plugin does and how to use it
+├── tests/                            # unittest, Python 3 stdlib. Outside plugins/, so it isn't installed
 ├── README.md                         # for users: install and use
 └── LICENSE                           # MIT
 ```
@@ -31,13 +32,14 @@ This repository is a Claude Code plugin marketplace named `itcrowd`. Client proj
 1. Make the change.
 2. Bump `version` in the plugin's `.claude-plugin/plugin.json`. Claude Code pins a plugin to its `version`, so without a bump the change doesn't reach users.
 3. Run `claude plugin validate .` from the repository root. It must pass with no errors.
-4. Update the plugin's row in `README.md` if its purpose changed.
+4. Run `python3 -m unittest discover -s tests` from the repository root. It must pass.
+5. Update the plugin's row in `README.md` if its purpose changed.
 
 ## Add a plugin
 
 1. Create `plugins/<category>/<plugin>/.claude-plugin/plugin.json` with `name`, `version`, `description`, `author`, `license` and `repository`.
 2. Add an entry to `.claude-plugin/marketplace.json` with `name`, `source`, `category` and `description`.
-3. Add a row to the category's table in `README.md` and add the plugin id to its category in "How it is organized". A new category also gets its own section and its own row.
+3. Add a row to the category's table in `README.md`. A new category also gets its own section.
 4. Run `claude plugin validate .`.
 
 ## Documentation links
