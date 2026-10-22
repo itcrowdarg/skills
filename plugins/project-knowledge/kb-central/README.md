@@ -32,22 +32,22 @@ Set `KB_CENTRAL_PROJECT` when the remote doesn't give the right id: a repository
 
 ## Set it up in a project
 
-Enable the plugin and name the central repository in the project's `.claude/settings.json`:
+Enable the plugin in the project's `.claude/settings.json`. Nothing else is needed: the central repository is `itcrowdarg/kb`, and it accepts entries from any project.
 
 ```json
 {
-  "env": {
-    "KB_CENTRAL_REPO": "itcrowdarg/kb"
-  },
   "enabledPlugins": {
     "kb-central@itcrowd": true
   }
 }
 ```
 
-Add `"KB_CENTRAL_PROJECT": "<org>/<repo>"` to `env` if the project needs it (see [Project id](#project-id)). The project id must be listed in `projects.txt` of the central repository.
+Optional settings in `env`:
 
-`env` values from the project settings apply after you trust the folder. Without `KB_CENTRAL_REPO`, the hook shows a one-line message and the skills explain how to set it.
+- `"KB_CENTRAL_PROJECT": "<org>/<repo>"`, if the project needs it (see [Project id](#project-id)).
+- `"KB_CENTRAL_REPO": "<owner>/<name>"`, to use another central repository.
+
+`env` values from the project settings apply after you trust the folder.
 
 ## Permissions
 

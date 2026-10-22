@@ -1,6 +1,6 @@
 ---
 name: kb-submit-troubleshooting
-description: Sends a solved problem of this project to the team's central knowledge base as a GitHub issue in the repository named by KB_CENTRAL_REPO. Use after a non-trivial problem was solved (build, Docker, deploy, dependencies, configuration, local services, OS or architecture differences, a non-obvious project behavior that made something fail), or when the user asks to share a problem and its solution with the team's knowledge base. Always shows the issue and asks before sending.
+description: Sends a solved problem of this project to the team's central knowledge base as a GitHub issue in the central repository (itcrowdarg/kb, or KB_CENTRAL_REPO). Use after a non-trivial problem was solved (build, Docker, deploy, dependencies, configuration, local services, OS or architecture differences, a non-obvious project behavior that made something fail), or when the user asks to share a problem and its solution with the team's knowledge base. Always shows the issue and asks before sending.
 allowed-tools:
   - Bash(python3 ${CLAUDE_PLUGIN_ROOT}/scripts/kb.py *)
   - Bash(python ${CLAUDE_PLUGIN_ROOT}/scripts/kb.py *)

@@ -1,6 +1,6 @@
 ---
 name: kb-search
-description: Searches the team's central knowledge base (the private repository named by KB_CENTRAL_REPO) for this project. Use when the user hits an error, a command fails, or the user asks how something works in this project, and the answer may already be documented by the team. Answers by citing the wiki page path.
+description: Searches the team's central knowledge base (the private repository itcrowdarg/kb, or KB_CENTRAL_REPO) for this project. Use when the user hits an error, a command fails, or the user asks how something works in this project, and the answer may already be documented by the team. Answers by citing the wiki page path.
 allowed-tools:
   - Bash(python3 ${CLAUDE_PLUGIN_ROOT}/scripts/kb.py *)
   - Bash(python ${CLAUDE_PLUGIN_ROOT}/scripts/kb.py *)

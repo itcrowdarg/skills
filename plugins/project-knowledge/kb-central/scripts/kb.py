@@ -2,7 +2,7 @@
 """Helpers shared by the kb-central skills and hook. Python 3 standard library only.
 
 Subcommands:
-  project          Print the central repository (KB_CENTRAL_REPO), the project id and the path of
+  project          Print the central repository (KB_CENTRAL_REPO, default itcrowdarg/kb), the project id and the path of
                    the project's index in the central repository.
   redact           Read text on stdin, print it with secrets and personal data replaced.
   draft            Read an issue body on stdin, redact it, check its shape and save it to a
@@ -21,10 +21,8 @@ import sys
 import tempfile
 import time
 
-SETUP_HINT = (
-    'Set KB_CENTRAL_REPO in the project\'s .claude/settings.json, for example '
-    '"env": {"KB_CENTRAL_REPO": "itcrowdarg/kb"}, then restart Claude Code.'
-)
+# Installing the plugin is enough: KB_CENTRAL_REPO only overrides the team's central repository.
+DEFAULT_REPO = "itcrowdarg/kb"
 PROJECT_HINT = (
     'Set KB_CENTRAL_PROJECT in the project\'s .claude/settings.json to the project id, '
     'for example "env": {"KB_CENTRAL_PROJECT": "<org>/<repo>"}, then restart Claude Code.'
@@ -55,9 +53,7 @@ class KbError(Exception):
 
 
 def central_repo():
-    repo = os.environ.get("KB_CENTRAL_REPO", "").strip()
-    if not repo:
-        raise KbError("KB_CENTRAL_REPO is not set. " + SETUP_HINT)
+    repo = os.environ.get("KB_CENTRAL_REPO", "").strip() or DEFAULT_REPO
     if not REPO_RE.match(repo):
         raise KbError("KB_CENTRAL_REPO must look like owner/name, got %r." % repo)
     return repo
