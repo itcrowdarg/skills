@@ -1,8 +1,8 @@
 # kb-central
 
-Connects a project to the team's central knowledge base: a private GitHub repository that holds a wiki for every project. Developers send what they learn as GitHub issues, and Claude reads the wiki when an error appears or a question comes up.
+Connects a project to the team's central knowledge base, [itcrowdarg/kb](https://github.com/itcrowdarg/kb): a private GitHub repository that holds a wiki for every project. Developers send what they learn as GitHub issues, and Claude reads the wiki when an error appears or a question comes up.
 
-The plugin never writes to the central repository other than by creating issues. A routine in that repository validates the issues and turns them into wiki pages through a pull request that a person reviews.
+The plugin never writes to the central repository other than by creating issues. A GitHub Action in that repository runs Claude on each new issue: it validates the issue and adds it to the wiki. See the [central repository's README](https://github.com/itcrowdarg/kb#readme). You need access to that private repository to open the links.
 
 ## What it adds
 
