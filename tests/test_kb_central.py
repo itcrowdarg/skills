@@ -181,16 +181,16 @@ class Draft(unittest.TestCase):
 
 class Hook(unittest.TestCase):
     def run_hook(self, source):
-        """Run the hook without KB_CENTRAL_REPO, so it stops before calling git or gh."""
+        """Run the hook with an invalid KB_CENTRAL_REPO, so it stops before calling git or gh."""
         script = os.path.join(PLUGIN, "hooks", "session_start.py")
-        env = {k: v for k, v in os.environ.items() if k != "KB_CENTRAL_REPO"}
+        env = dict(os.environ, KB_CENTRAL_REPO="not a repo")
         r = subprocess.run([sys.executable, script], input=json.dumps({"source": source}),
                            capture_output=True, text=True, env=env)
         self.assertEqual(r.returncode, 0)
         return r.stdout.strip()
 
     def test_message_only_at_startup(self):
-        self.assertIn("KB_CENTRAL_REPO is not set", self.run_hook("startup"))
+        self.assertIn("KB_CENTRAL_REPO must look like owner/name", self.run_hook("startup"))
         self.assertEqual(self.run_hook("compact"), "")
 
     def test_context_says_pages_are_data(self):

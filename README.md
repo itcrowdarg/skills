@@ -16,7 +16,7 @@ Helps developers understand a project and keep what the team learns about it.
 
 | Plugin | What it does |
 |---|---|
-| [`kb-central`](plugins/project-knowledge/kb-central) | Connects the project to the team's central knowledge base, a private repository with a wiki per project. Claude reads the wiki when an error appears, and sends the problems the team solves as GitHub issues after you confirm them. Needs `KB_CENTRAL_REPO` in the project settings and `gh` logged in on every machine. |
+| [`kb-central`](plugins/project-knowledge/kb-central) | Connects the project to the team's central knowledge base, a private repository with a wiki per project. Claude reads the wiki when an error appears, and sends the problems the team solves as GitHub issues after you confirm them. Needs `gh` logged in on every machine. |
 
 ### Planned categories
 
@@ -45,9 +45,6 @@ Create or edit `.claude/settings.json` in the root of the project repository and
   },
   "enabledPlugins": {
     "kb-central@itcrowd": true
-  },
-  "env": {
-    "KB_CENTRAL_REPO": "itcrowdarg/kb"
   }
 }
 ```
@@ -55,7 +52,7 @@ Create or edit `.claude/settings.json` in the root of the project repository and
 - `extraKnownMarketplaces` tells Claude Code where the `itcrowd` marketplace lives.
 - `autoUpdate: true` keeps the plugins up to date on every developer's machine. See [Updates](#updates).
 - `enabledPlugins` lists the plugins the project uses, as `<plugin>@itcrowd`.
-- `env` holds the settings some plugins need. Each plugin's README lists them: `kb-central` needs `KB_CENTRAL_REPO`, and the project must be listed in the central repository. See [its README](plugins/project-knowledge/kb-central).
+- Some plugins have optional settings in `env`. Each plugin's README lists them. `kb-central` needs none.
 
 ### Choose categories and plugins
 
